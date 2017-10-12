@@ -4,22 +4,14 @@
 #include <visualization_msgs/MarkerArray.h>
 
 #include <viewstructure.h>
+#include <viewsynthesis.h>
+
 
 #include <octomap/ColorOcTree.h>
 #include <octomap/math/Pose6D.h>
 
 int main (int argc, char** argv)
 {
-  if (argc != 2) { // Check the value of argc. If not enough parameters have been passed, inform user and exit.
-        
-        std::cout << "Usage is: " << argv[0] <<  " <views_file.vs>\n"; // Inform the user of how to use the program
-	std::cout << "Received parameters: " << argc << "\n"; // Inform the user of how to use the program
-        exit(0);
-  }
-  std::string file(argv[1]);
-  
-  octomath::Pose6D pose;
-
   ros::init(argc, argv, "basic_shapes");
   ros::NodeHandle n;
   ros::Rate r(1);
@@ -28,13 +20,26 @@ int main (int argc, char** argv)
   uint32_t shape = visualization_msgs::Marker::ARROW;
   visualization_msgs::Marker marker;
   visualization_msgs::MarkerArray marker_array_msg;
+  
+  ViewStructure min;
+  min.setPose(-5.0,-5.0,0,0,0,0);
 
+  ViewStructure max;
+  max.setPose(5.0,5.0,5.0,3.14,3.14,3.14);
+  
   ViewList views;
+  
+  float radio=1;
+  int depth = 1;
+  ViewSphereSynthesis generator(radio, 0, 0, 0, depth);
+  generator.getViews(views);
+  
+  //ViewList views;
   ViewList::iterator it;
-  ViewStructure vmin;
+  //ViewStructure vmin;
   int n_views;
 
-  views.read(file.c_str());
+  //views.read(file.c_str());
   n_views = views.size();
 
   marker_array_msg.markers.resize(n_views);

@@ -132,11 +132,47 @@ include_directories(
 # add_dependencies(using_makers ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-add_executable(basic_shapes src/basic_shapes.cpp src/viewstructure.cpp)
-target_link_libraries(basic_shapes ${catkin_LIBRARIES})
 
-add_executable(view_list_pub src/view_list_pub.cpp src/viewstructure.cpp)
-target_link_libraries(view_list_pub ${catkin_LIBRARIES})
+set(OCTOMAP_INCLUDE_DIR /home/irving/projects/ViewPlanning/octomap-devel/octomap/include)
+set(OCTOMAP_LIB_DIR /home/irving/projects/ViewPlanning/octomap-devel/lib)
+set(LIBS_OCTOMAP octomap octomath)
+
+include_directories(${OCTOMAP_INCLUDE_DIR})
+link_directories(${OCTOMAP_LIB_DIR})
+
+
+set(PM_INCLUDE_DIR /home/irving/projects/ViewPlanning/partialmodel/partialmodel)
+set(PM_LIB_DIR /home/irving/projects/ViewPlanning/partialmodel/lib)
+set(LIB_PM PartialModel)
+
+include_directories(${PM_INCLUDE_DIR})
+link_directories(${PM_LIB_DIR})
+# 
+# # ---------------- MRPT ---------------------
+# find_package(MRPT REQUIRED)
+# include_directories(${MRPT_INCLUDE_DIRS})
+# link_directories(${MRPT_LINK_DIRECTORIES})
+# include_directories(/usr/include/mrpt/gui/include)
+# set(LIBS_MRPT mrpt-base)
+# 
+# set(VP_INCLUDE_DIR /home/irving/projects/ViewPlanning/partialmodel/viewplanning)
+# set(VP_LIB_DIR /home/irving/projects/ViewPlanning/partialmodel/lib)
+# set(LIB_VP ViewPlanning)
+# 
+# include_directories(${VP_INCLUDE_DIR})
+# link_directories(${VP_LIB_DIR} )
+
+
+add_executable(basic_shapes src/basic_shapes.cpp)
+target_link_libraries(basic_shapes ${catkin_LIBRARIES} ${LIBS_OCTOMAP} ${LIB_PM})
+
+add_executable(view_list_pub src/view_list_pub.cpp)
+target_link_libraries(view_list_pub ${catkin_LIBRARIES} ${LIBS_OCTOMAP} ${LIB_PM})
+
+add_executable(freeflyer src/freeflyer_ros.cpp)
+target_link_libraries(freeflyer ${catkin_LIBRARIES} ${LIBS_OCTOMAP} ${LIB_PM} )
+
+
 #add_dependencies(basic_shapes )
 
 ## Add cmake target dependencies of the executable
